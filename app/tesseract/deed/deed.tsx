@@ -25,7 +25,11 @@ export default function Home(){
   }
   return (
     <div style={{ padding: 20 }}>
-      <h1>Deed Verification</h1>
+      <h1 >
+        <span>
+          Deed verification
+        </span>
+      </h1>
       <h1>Drag files to upload</h1>
       <div>
         <form onSubmit={handleSubmit}>
@@ -44,7 +48,7 @@ export default function Home(){
         />
         <button type="submit">Confirm</button>
       </form>
-          <h2>Recomendation</h2>
+          <h1>Recomendation</h1>
           <p>Use a clear and well-lit photo Make sure the image is not blurry and all information is easy to read. Upload photos of the front and back to show all the details.</p>
           <p>Avoid reflections and shadows Do not use direct light that creates glare or hides information.</p>
           <p>Keep the document fully visible and centered The ID must appear complete, without cutting off edges or corners.</p>
