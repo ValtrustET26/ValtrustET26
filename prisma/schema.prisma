@@ -11,3 +11,119 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Role {
+  buyer
+  seller
+  admin
+}
+
+enum VerificationStatus {
+  pending
+  approved
+  rejected
+}
+
+model User {
+  id           String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime       @default(now())
+ 
+  properties    Property[]
+  sentMessages  Message[]      @relation("SentMessages")
+  receivedMessages Message[]   @relation("ReceivedMessages")
+  favorites     Favorite[]
+  notifications Notification[]
+  verifications Verification[]
+}
+
+model Property {
+  id         String       @id @default(uuid())
+  userId     String
+  title      String
+  location   String
+  areaM2     Float
+  rooms      Int
+  bathrooms  Int
+  price      Decimal
+  isVerified Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+
+  user        User         @relation(fields: [userId], references: [id])
+  photos      PropertyPhoto[]
+  valuation   Valuation?
+  verification Verification?
+  messages    Message[]
+  favorites   Favorite[]
+}
+
+model PropertyPhoto {
+  id         String   @id @default(uuid())
+  propertyId String
+  url        String
+  order      Int
+
+  property   Property @relation(fields: [propertyId], references: [id])
+}
+
+model Valuation {
+  id             String   @id @default(uuid())
+  propertyId     String   @unique
+  estimatedPrice Decimal
+  ssfCriteria    Json
+  generatedAt    DateTime @default(now())
+
+  property       Property @relation(fields: [propertyId], references: [id])
+}
+
+model Verification {
+  id         String             @id @default(uuid())
+  propertyId String             @unique
+  adminId    String
+  status     VerificationStatus @default(pending)
+  notes      String?
+  verifiedAt DateTime?
+
+  property   Property @relation(fields: [propertyId], references: [id])
+  admin      User     @relation(fields: [adminId], references: [id])
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  propertyId String
+  content    String
+  sentAt     DateTime @default(now())
+
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  property   Property @relation(fields: [propertyId], references: [id])
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  propertyId String
+  savedAt    DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  property   Property @relation(fields: [propertyId], references: [id])
+
+  @@unique([userId, propertyId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
