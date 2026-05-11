@@ -1,6 +1,6 @@
 export default function Login() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-white">
+    <div className="min-h-screen overflow-hidden bg-white ">
       <>
         <meta charSet="UTF-8" />
         <meta
@@ -132,7 +132,7 @@ export default function Login() {
 
           <div className="hidden md:flex md:w-1/2 h-screen items-center justify-center relative overflow-hidden">
             
-            <div className="absolute -top-40 -right-28 w-[720px] h-[720gpx] rounded-full bg-gradient-to-br from-[#163d96] via-[#2458d4] to-[#3f95ff] border-[3px] border-[#00a2ff]" />
+            <div className="absolute -top-40 -right-28 w-[720px] h-[720px] rounded-full bg-gradient-to-br from-[#163d96] via-[#2458d4] to-[#3f95ff] border-[3px] border-[#00a2ff]" />
 
             <div className="absolute -bottom-24 -right-16 w-[320px] h-[320px] rounded-full bg-[#14337e]" />
 
