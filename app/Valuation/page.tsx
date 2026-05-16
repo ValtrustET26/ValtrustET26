@@ -1,235 +1,122 @@
 "use client";
 
 import { useState } from "react";
-import { calculateValuation, ValuationInput, ValuationResult } from "./actions";
+import {ZONES} from "./actions";
 
-const ZONES: Record<string, Record<string, string[]>> = {
-  "San Salvador": {
-    "San Salvador": ["Colonia Escalón", "San Benito", "Colonia Médica"],
-    Soyapango: ["Residencial Soyapango"],
-    Mejicanos: ["Col. Zacamil"],
-  },
-  "La Libertad": {
-    "Antiguo Cuscatlán": ["Jardines de Guadalupe", "Maquilishuat"],
-    "Santa Tecla": ["Residencial Santa Tecla", "Ciudad Merliot"],
-    Zaragoza: ["Residencial Zaragoza"],
-  },
-  "Santa Ana": {
-    "Santa Ana": ["Colonia Flor Blanca", "Centro"],
-    Chalchuapa: ["Residencial Chalchuapa"],
-    Metapán: ["Centro Metapán"],
-  },
-};
+export default function Valuation() {
 
-const defaultForm: ValuationInput = {
-  department: "",
-  municipality: "",
-  zone: "",
-  type: "house",
-  condition: "good",
-  areaM2: 0,
-  landAreaM2: null,
-  bedrooms: 3,
-  bathrooms: 2,
-  parking: 1,
-  hasPool: false,
-  hasSecurity: false,
-  hasGarden: false,
-  hasAC: false,
-};
+    const [department, setDepartment] = useState<string>("");
+    const [municipality, setMunicipality] = useState<string>("");
+    const [zone, setZone] = useState<string>("");
 
-export default function ValuationPage() {
-  const [form, setForm] = useState<ValuationInput>(defaultForm);
-  const [result, setResult] = useState<ValuationResult | null>(null);
-  const [loading, setLoading] = useState(false);
+    const municipalities = department ? Object.keys(ZONES[department] || {}) : [];
+    const zones = department && municipality ? ZONES[department]?.[municipality] || []: [];
 
-  const municipalities = form.department ? Object.keys(ZONES[form.department] || {}) : [];
-  const zones = form.municipality ? ZONES[form.department]?.[form.municipality] || [] : [];
+    return(
+    <section className="flex flex-col items-center bg-white">
+        <figure className="flex flex-col items-center w-150 gap-y-11">
+            <div className="flex flex-col items-center text-center gap-y-5">
+                <p className="text-5xl font-semibold text-[#0D4687] tracking-[0.035em]">Ready to discover your property value?</p>
+                <p className="text-2xl text-[#0B1E4A]">Take the first step toward tour property valuation, complete a few details to get your estimate</p>
+            </div>
+            <div className="flex flex-col gap-y-15">
+                <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-3">
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
+                    {/*Locations Form*/}
+                    <p className="text-white text-xl">Location</p>
 
-    setForm((prev) => {
-      const updated = {
-        ...prev,
-        [name]: type === "checkbox" ? checked : type === "number" ? Number(value) : value,
-      };
-      // Reset dependientes
-      if (name === "department") { updated.municipality = ""; updated.zone = ""; }
-      if (name === "municipality") { updated.zone = ""; }
-      return updated;
-    });
-  }
 
-  async function handleSubmit() {
-    if (!form.department || !form.municipality || !form.zone || !form.areaM2) {
-      alert("Por favor completa todos los campos requeridos.");
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await calculateValuation(form);
-      setResult(res);
-    } catch (err) {
-      console.error(err);
-      alert("Error al calcular. Intenta de nuevo.");
-    } finally {
-      setLoading(false);
-    }
-  }
+                    <div className="flex flex-col gap-y-4">
 
-  const fmt = (n: number) =>
-    n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+                        {/*DEPARMENT/STATE DropDown*/}
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">DEPARMENT / STATE</p>
+                            <select
+                            className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3 placeholder:-translate-y-0.5 text-black"
+                            value = {department}
+                            onChange={(event) => {
+                                setDepartment(event.target.value);
+                                setMunicipality("");
+                                setZone("");
+                            }}
+                            >
+                                <option value=""></option>
+                                {Object.keys(ZONES).map((actualDepartment) => <option key={actualDepartment}>{actualDepartment}</option>)}
+                            </select>
+                        </div>
 
-  return (
-    <div style={{ maxWidth: 600, margin: "0 auto", padding: "2rem" }}>
-      <h1 style={{ marginBottom: "1.5rem" }}>Valuación de Propiedad</h1>
+                        {/*MUNICIPALITY/CITY DropDown*/}
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">MUNICIPALITY / CITY</p>
+                            <select className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3 placeholder:-translate-y-0.5 text-black"
+                            value = {municipality}
+                            onChange={(event) => {
+                                setMunicipality(event.target.value);
+                                setZone("");
+                            }}>
+                                <option value=""></option>
+                                {municipalities.map((actualMunicipality) => <option key={actualMunicipality}>{actualMunicipality}</option>)}
+                            </select>
+                        </div>
 
-      {/* Ubicación */}
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ marginBottom: "0.75rem", fontSize: "1rem", opacity: 0.7 }}>Ubicación</h2>
+                        {/*ZONE/NEIGHBORHOOD DropDown*/}
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">ZONE / NEIGHBORHOOD</p>
+                            <select className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3 placeholder:-translate-y-0.5 text-black"
+                            value={zone}
+                            onChange={(event) => {
+                                setZone(event.target.value);
+                            }}>
+                                <option value=""></option>
+                                {zones.map((actualZone) => <option key={actualZone}>{actualZone}</option>)}
+                            </select>
+                        </div>
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">EXACT ADDRESS</p>
+                            <input className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3 placeholder:-translate-y-0.2 text-black" placeholder="e.g Street, Avenue, House Number" type="text"/>
+                        </div>
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">POSTAL CODE</p>
+                            <input className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3   placeholder:-translate-y-0.2 text-black" placeholder="e.g 10101" type="number"/>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-3">
 
-        <label>Departamento *</label>
-        <select name="department" value={form.department} onChange={handleChange} style={selectStyle}>
-          <option value="">Seleccionar</option>
-          {Object.keys(ZONES).map((d) => <option key={d}>{d}</option>)}
-        </select>
+                    {/*Property Details Form*/}
+                    <p className="text-white text-xl">Property Details</p>
 
-        <label>Municipio *</label>
-        <select name="municipality" value={form.municipality} onChange={handleChange} style={selectStyle} disabled={!form.department}>
-          <option value="">Seleccionar</option>
-          {municipalities.map((m) => <option key={m}>{m}</option>)}
-        </select>
 
-        <label>Zona / Colonia *</label>
-        <select name="zone" value={form.zone} onChange={handleChange} style={selectStyle} disabled={!form.municipality}>
-          <option value="">Seleccionar</option>
-          {zones.map((z) => <option key={z}>{z}</option>)}
-        </select>
-      </section>
-
-      {/* Detalles */}
-      <section style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ marginBottom: "0.75rem", fontSize: "1rem", opacity: 0.7 }}>Detalles</h2>
-
-        <label>Tipo de propiedad</label>
-        <select name="type" value={form.type} onChange={handleChange} style={selectStyle}>
-          <option value="house">Casa</option>
-          <option value="apartment">Apartamento</option>
-          <option value="land">Terreno</option>
-        </select>
-
-        <label>Condición</label>
-        <select name="condition" value={form.condition} onChange={handleChange} style={selectStyle}>
-          <option value="new">Nueva</option>
-          <option value="good">Buena</option>
-          <option value="fair">Regular</option>
-          <option value="needs_work">Necesita trabajo</option>
-        </select>
-
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          <div>
-            <label>Área construcción (m²) *</label>
-            <input name="areaM2" type="number" value={form.areaM2 || ""} onChange={handleChange} style={inputStyle} placeholder="ej: 150" />
-          </div>
-          <div>
-            <label>Área terreno (m²)</label>
-            <input name="landAreaM2" type="number" value={form.landAreaM2 || ""} onChange={handleChange} style={inputStyle} placeholder="ej: 200" />
-          </div>
-          <div>
-            <label>Habitaciones</label>
-            <input name="bedrooms" type="number" value={form.bedrooms} onChange={handleChange} style={inputStyle} min={1} />
-          </div>
-          <div>
-            <label>Baños</label>
-            <input name="bathrooms" type="number" value={form.bathrooms} onChange={handleChange} style={inputStyle} min={1} />
-          </div>
-          <div>
-            <label>Parqueos</label>
-            <input name="parking" type="number" value={form.parking} onChange={handleChange} style={inputStyle} min={0} />
-          </div>
-        </div>
-      </section>
-
-      {/* Amenidades */}
-      <section style={{ marginBottom: "2rem" }}>
-        <h2 style={{ marginBottom: "0.75rem", fontSize: "1rem", opacity: 0.7 }}>Amenidades</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
-          {[
-            { name: "hasPool", label: "Piscina (+8%)" },
-            { name: "hasSecurity", label: "Seguridad (+5%)" },
-            { name: "hasGarden", label: "Jardín (+3%)" },
-            { name: "hasAC", label: "Aire acondicionado (+4%)" },
-          ].map(({ name, label }) => (
-            <label key={name} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                name={name}
-                checked={form[name as keyof ValuationInput] as boolean}
-                onChange={handleChange}
-              />
-              {label}
-            </label>
-          ))}
-        </div>
-      </section>
-
-      {/* Botón */}
-      <button onClick={handleSubmit} disabled={loading} style={buttonStyle}>
-        {loading ? "Calculando..." : "Calcular Valuación"}
-      </button>
-
-      {/* Resultado */}
-      {result && (
-        <div style={{ marginTop: "2rem", padding: "1.5rem", border: "1px solid #333", borderRadius: 8 }}>
-          <h2 style={{ marginBottom: "1rem" }}>Estimado de Valuación</h2>
-          <div style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#4ade80" }}>
-            {fmt(result.estimatedValue)}
-          </div>
-          <div style={{ marginTop: "0.5rem", opacity: 0.7 }}>
-            Rango: {fmt(result.estimatedMin)} — {fmt(result.estimatedMax)}
-          </div>
-          <div style={{ marginTop: "0.25rem", opacity: 0.7 }}>
-            Precio por m²: {fmt(result.pricePerM2)}
-          </div>
-        </div>
-      )}
-    </div>
-  );
+                    <div className="flex flex-col gap-y-4">
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">PROPERTY TYPE</p>
+                            <select className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3 placeholder:-translate-y-0.5 text-black">
+                                <option value=""></option>
+                                <option value="la-libertad">House</option>
+                                <option value="san-salvador">Apartment</option>
+                                <option value="santa-ana">Land</option>
+                            </select>
+                        </div>
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">CONSTRUCTION AREA (m²)</p>
+                            <input className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3 placeholder:-translate-y-0.2 px-2 text-black" placeholder="0.00" type="number"/>
+                        </div>
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">LOT AREA (m²)</p>
+                            <input className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3   placeholder:-translate-y-0.2 px-2 text-black" placeholder="0.00" type="number"/>
+                        </div>
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">LEVELS / FLOORS</p>
+                            <input className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3   placeholder:-translate-y-0.2 px-2 text-black" placeholder="e.g 1" type="number"/>
+                        </div>
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-white">YEAR BUILT</p>
+                            <input className="bg-white w-full h-7 placeholder:text-sm placeholder:p-3   placeholder:-translate-y-0.2 px-2 text-black" placeholder="e.g 2022" type="number"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </figure>
+    </section>
+    )
 }
-
-const selectStyle: React.CSSProperties = {
-  display: "block",
-  width: "100%",
-  padding: "0.5rem",
-  marginBottom: "0.75rem",
-  marginTop: "0.25rem",
-  background: "#1a1a1a",
-  color: "#ededed",
-  border: "1px solid #333",
-  borderRadius: 6,
-};
-
-const inputStyle: React.CSSProperties = {
-  display: "block",
-  width: "100%",
-  padding: "0.5rem",
-  marginTop: "0.25rem",
-  background: "#1a1a1a",
-  color: "#ededed",
-  border: "1px solid #333",
-  borderRadius: 6,
-};
-
-const buttonStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "0.75rem",
-  background: "#4ade80",
-  color: "#000",
-  border: "none",
-  borderRadius: 6,
-  fontSize: "1rem",
-  fontWeight: "bold",
-  cursor: "pointer",
-};
