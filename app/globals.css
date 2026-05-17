@@ -17,6 +17,16 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@keyframes scan {
+  0%   { top: 0%; }
+  100% { top: calc(100% - 2px); }
+}
+
+.scan-line {
+  animation: scan 1.5s ease-in-out infinite alternate;
+  top: 0;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

@@ -1,0 +1,7 @@
+{
+    "remote.localPortHost": "allInterfaces",
+    "workbench.externalBrowser": "Edge",
+    "liveServer.settings.CustomBrowser": "microsoft-edge",
+    "workbench.browser.showInTitleBar": true,
+    "workbench.browser.enableChatTools": false
+}

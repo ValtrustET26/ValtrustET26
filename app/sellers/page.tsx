@@ -5,6 +5,11 @@ import DeedUpload        from "../components/sellers/Deed";
 import ExcerptCertUpload from "../components/sellers/Excerpt";
 import DuiUpload         from "../components/sellers/DUI";
 
+interface SellersProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 type Stage = "info" | "deed" | "excerptCert" | "dui" | "result";
 type VerifyState = "loading" | "verified" | "unverified";
 
@@ -113,9 +118,9 @@ function ResultStage({ onRestart, onBack }: { onRestart: () => void; onBack: () 
   );
 }
 
-// ── Principal export ─────────────────────────────────────────────────────
+// ── Principal export ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-export default function Sellers() {
+export default function Sellers({ isOpen, onClose }: SellersProps) {
   const [stage, setStage]     = useState<Stage>("info");
   const [animKey, setAnimKey] = useState(0);
 
@@ -127,10 +132,19 @@ export default function Sellers() {
   const handleExcerptCertFile = (file: File) => { /* Tesseract - excerptCert */ };
   const handleDuiFile         = (file: File) => { /* Tesseract - dui */ };
 
-  return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-10">
+  if (!isOpen) return null;
 
-      <section className="w-full max-w-2xl rounded-2xl bg-white shadow-xl border border-gray-200 p-6 md:p-10">
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <section className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[var(--wh-main)] shadow-xl border border-gray-200 p-6 md:p-10">
+
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--gr-main)] text-white text-sm font-semibold"
+        >✕</button>
 
         {/* Step indicator (stages) */}
         <div className="flex items-center justify-center mb-8 px-4">
@@ -263,6 +277,6 @@ export default function Sellers() {
         </div>
 
       </section>
-    </main>
+    </div>
   );
 }

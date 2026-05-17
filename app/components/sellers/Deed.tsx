@@ -61,7 +61,7 @@ export default function DeedUpload({ onFileChange }: DeedUploadProps) {
     if (!file) return;
     setUploaded(true);
     setFileName(file.name);
-    onFileChange?.(file);
+    onFileChange?.(file); // Enviar el archivo al componente padre ( para papi Tesseract OCR)
   };
 
   return (
