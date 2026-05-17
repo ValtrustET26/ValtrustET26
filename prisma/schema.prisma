@@ -9,31 +9,61 @@ datasource db {
 // Valuation system (DEMO)
 
 model Valuation {
-  id             Int      @id @default(autoincrement())
+  id                      Int      @id @default(autoincrement())
 
-  // Inputs from the user
-  department     String
-  municipality   String
-  zone           String
-  type           String
-  areaM2         Float
-  landAreaM2     Float?
-  bedrooms       Int
-  bathrooms      Int
-  parking        Int
-  condition      String
-  hasPool        Boolean
-  hasSecurity    Boolean
-  hasGarden      Boolean
-  hasAC          Boolean
+  // Location
+  department              String
+  municipality            String
+  zone                    String
+  exactAddress            String?
+  postalCode              String?
 
-  // What it calculates
-  estimatedMin   Float
-  estimatedMax   Float
-  estimatedValue Float
-  pricePerM2     Float
+  // Property Details
+  type                    String
+  condition               String
+  areaM2                  Float
+  landAreaM2              Float?
+  levels                  Int
+  yearBuilt               Int
 
-  createdAt      DateTime @default(now())
+  // Rooms & Spaces
+  bedrooms                Int
+  bathrooms               Int
+  parkingSpaces           Int
+  kitchenType             String
+  hasLivingDiningRoom     Boolean
+  hasLaundryRoom          Boolean
+  hasStorageCellar        Boolean
+  hasStudioHomeOffice     Boolean
+  hasServiceQuarter       Boolean
+
+  // Condition / Extras
+  hasAC                   Boolean
+  hasSmartHome            Boolean
+  hasPool                 Boolean
+
+  // Security & Amenities
+  hasSecurityGate         Boolean
+  hasCCTV                 Boolean
+  hasGym                  Boolean
+  hasElevator             Boolean
+  hasGreenAreas           Boolean
+  hasOtherAmenity         Boolean
+  otherAmenityDescription String?
+
+  // Additional Information
+  publicDescription       String?
+  maintenanceFee          Float?
+  petsAllowed             String
+  includedServices        String?
+
+  // Result
+  estimatedMin            Float
+  estimatedMax            Float
+  estimatedValue          Float
+  pricePerM2              Float
+
+  createdAt               DateTime @default(now())
 }
 
 // General tables
