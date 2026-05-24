@@ -9,16 +9,21 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/genai": "^2.6.0",
+    "@google/generative-ai": "^0.24.1",
     "@heroicons/react": "^2.2.0",
     "@photo-sphere-viewer/core": "^5.14.1",
     "@photo-sphere-viewer/virtual-tour-plugin": "^5.14.1",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@tailwindcss/typography": "^0.5.19",
     "cloudinary": "^2.10.0",
     "next": "16.2.4",
     "pg": "^8.20.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
