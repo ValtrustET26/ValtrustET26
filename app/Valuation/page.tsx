@@ -145,7 +145,10 @@ export default function Valuation() {
                 </div>
                 <div className="flex flex-col gap-y-15">
                     <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-3">
-                        <p className="text-white text-xl font-medium">Location</p>
+                        <div className="flex flex-row gap-x-2">
+                            <img src="/Valuation/location-icon.png" alt="" className="h-5 mt-1"/>
+                            <p className="text-white text-xl font-medium">Location</p>
+                        </div>
                         <div className="flex flex-col gap-y-4">
                             <div className="flex flex-col gap-y-1">
                                 <p className="text-white text-xs font-medium tracking-[0.05em] uppercase">DEPARTMENT / STATE</p>
@@ -222,7 +225,10 @@ export default function Valuation() {
                     </div>
 
                     <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-3">
-                        <p className="text-white text-xl">Property Details</p>
+                        <div className="flex flex-row gap-x-2">
+                            <img src="/Valuation/property-icon.png" alt="" className="h-5 mt-1"/>
+                            <p className="text-white text-xl font-medium">Property Details</p>
+                        </div>
                         <div className="flex flex-col gap-y-4">
                             <div className="flex flex-col gap-y-1">
                                 <p className="text-white text-xs font-medium tracking-[0.05em] uppercase">PROPERTY TYPE</p>
@@ -283,9 +289,12 @@ export default function Valuation() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-3">
-                        <p className="text-white text-xl">Rooms and Spaces</p>
-                        <div className="flex flex-col gap-y-4">
+                    <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-6">
+                        <div className="flex flex-row gap-x-2">
+                            <img src="/Valuation/bed-icon.png" alt="" className="h-5 mt-1"/>
+                            <p className="text-white text-xl font-medium">Room & Spaces</p>
+                        </div>
+                        <div className="flex flex-col gap-y-6">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex flex-col gap-y-1">
                                     <p className="text-white text-xs font-medium tracking-[0.05em] uppercase">Bedrooms</p>
@@ -338,7 +347,7 @@ export default function Valuation() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-y-3 gap-x-4 mt-2">
+                            <div className="grid grid-cols-2 gap-y-5 gap-x-4 mt-2">
                                 <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
                                     <input
                                         name="hasLivingDiningRoom"
@@ -388,10 +397,13 @@ export default function Valuation() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-3">
-                        <p className="text-white text-xl">Condition</p>
-                        <div className="flex flex-col gap-y-4">
-                            <div className="flex flex-col gap-y-1">
+                    <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-4">
+                        <div className="flex flex-row gap-x-2">
+                            <img src="/Valuation/tools-icon.png" alt="" className="h-6 mt-0.5"/>
+                            <p className="text-white text-xl font-medium">Condition</p>
+                        </div>
+                        <div className="flex flex-col gap-y-6">
+                            <div className="flex flex-col gap-y-2">
                                 <p className="text-white text-xs font-medium tracking-[0.05em] uppercase">Condition</p>
                                 <select
                                     name="condition"
@@ -406,7 +418,7 @@ export default function Valuation() {
                                 </select>
                             </div>
 
-                            <div className="flex flex-col gap-y-3">
+                            <div className="flex flex-col gap-y-6">
                                 <p className="text-white text-xs font-bold tracking-widest uppercase">Interiors / Extras</p>
                                 <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
                                     <input
@@ -439,9 +451,12 @@ export default function Valuation() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-3">
-                        <p className="text-white text-xl">Security & Amenities</p>
-                        <div className="flex flex-col gap-y-4">
+                    <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-4">
+                        <div className="flex flex-row gap-x-2">
+                            <img src="/Valuation/shield-icon.png" alt="" className="h-8 mb-2 "/>
+                            <p className="text-white text-xl font-medium mt-0.5">Security & Amenities</p>
+                        </div>
+                        <div className="flex flex-col gap-y-6">
                             <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
                                 <input
                                     name="hasSecurityGate"
@@ -508,8 +523,11 @@ export default function Valuation() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-4">
-                        <p className="text-white text-xl">Additional Information</p>
+                    <div className="flex flex-col bg-[#0B1E4A] w-130 h-full p-6 gap-y-7">
+                        <div className="flex flex-row gap-x-2">
+                            <img src="/Valuation/info-icon.png" alt="" className="h-8 mb-2 "/>
+                            <p className="text-white text-xl font-medium mt-1">Aditional Information</p>
+                        </div>
                         <div className="flex flex-col gap-y-1">
                             <p className="text-white text-xs font-medium tracking-[0.05em] uppercase">Public Description</p>
                             <textarea
@@ -564,8 +582,8 @@ export default function Valuation() {
                         </div>
                         <button
                             onClick={handleSubmit}
-                            className="flex items-center justify-center gap-2 bg-[#0B1E4A] w-full h-10 text-white text-sm font-bold cursor-pointer">
-                            📊 Get Instant House Estimate
+                            className="flex items-center justify-center gap-2 bg-[#0B1E4A] w-full h-20 text-white text-sm font-bold cursor-pointer">
+                            <img src="/Valuation/stadistics-icon.png" alt="" className="h-4"/> Get Instant House Estimate
                         </button>
                         <p className="text-black text-sm text-center font-semibold">
                             By saving, you agree to Valtrust Real Estate's institutional terms and conditions
