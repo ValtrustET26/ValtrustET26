@@ -49,6 +49,7 @@ export default function ValtrustIA() {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const activeChat = chats.find((c) => c.id === activeChatId) ?? null;
@@ -119,20 +120,57 @@ export default function ValtrustIA() {
         <div className="flex h-screen font-sans bg-[#f4f4f0]">
 
             {/* Sidebar */}
-            <aside className="w-[220px] bg-white border-r border-gray-200 flex flex-col shrink-0">
+            <aside
+                className={`bg-white border-r border-gray-200 flex flex-col shrink-0 overflow-hidden transition-all duration-300 ease-in-out ${
+                    sidebarOpen ? "w-[220px]" : "w-[52px]"
+                }`}
+            >
+                {/* Top actions */}
+                <div className="px-2.5 pt-3 pb-2 flex flex-col gap-2">
 
-                {/* New conversation */}
-                <div className="px-2.5 pt-3 pb-2">
+                    {/* Toggle button */}
+                    <button
+                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                        title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors cursor-pointer shrink-0 self-center"
+                    >
+                        {/* Hamburger / panel icon */}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            {sidebarOpen ? (
+                                <>
+                                    <rect x="1" y="3" width="14" height="1.5" rx="0.75" fill="currentColor" />
+                                    <rect x="1" y="7.25" width="14" height="1.5" rx="0.75" fill="currentColor" />
+                                    <rect x="1" y="11.5" width="14" height="1.5" rx="0.75" fill="currentColor" />
+                                </>
+                            ) : (
+                                <>
+                                    <rect x="1" y="3" width="14" height="1.5" rx="0.75" fill="currentColor" />
+                                    <rect x="1" y="7.25" width="14" height="1.5" rx="0.75" fill="currentColor" />
+                                    <rect x="1" y="11.5" width="14" height="1.5" rx="0.75" fill="currentColor" />
+                                </>
+                            )}
+                        </svg>
+                    </button>
+
+                    {/* New conversation button */}
                     <button
                         onClick={startNewConversation}
-                        className="w-full flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-lg text-[13px] text-gray-600 bg-white hover:bg-gray-50 transition-colors cursor-pointer text-left"
+                        title="New conversation"
+                        className={`flex items-center gap-1.5 px-2 py-1.5 border border-gray-300 rounded-lg text-[13px] text-gray-600 bg-white hover:bg-gray-50 transition-colors cursor-pointer ${
+                            sidebarOpen ? "w-full" : "w-8 h-8 justify-center border-none hover:bg-gray-100"
+                        }`}
                     >
-                        <span className="text-base leading-none">+</span> New conversation
+                        <span className="text-base leading-none shrink-0">+</span>
+                        {sidebarOpen && <span>New conversation</span>}
                     </button>
                 </div>
 
-                {/* Search */}
-                <div className="px-2.5 pb-2">
+                {/* Search — only when open */}
+                <div
+                    className={`px-2.5 pb-2 transition-all duration-200 ${
+                        sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+                    }`}
+                >
                     <input
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
@@ -142,44 +180,63 @@ export default function ValtrustIA() {
                 </div>
 
                 {/* Chat list */}
-                <div className="flex-1 overflow-y-auto px-2.5">
-                    {filtered.length > 0 && (
+                <div className="flex-1 overflow-y-auto px-2">
+                    {sidebarOpen && filtered.length > 0 && (
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mx-0.5 mt-1.5 mb-1">Today</p>
                     )}
-                    {filtered.map((chat) => (
-                        <div
-                            key={chat.id}
-                            onClick={() => { setActiveChatId(chat.id); setDeleteConfirm(null); }}
-                            className={`group flex items-center gap-1.5 px-2 py-1.5 rounded-lg cursor-pointer mb-0.5 border transition-colors ${activeChatId === chat.id
-                                    ? "bg-blue-50 border-blue-200"
-                                    : "border-transparent hover:bg-gray-50"
+
+                    {sidebarOpen ? (
+                        filtered.map((chat) => (
+                            <div
+                                key={chat.id}
+                                onClick={() => { setActiveChatId(chat.id); setDeleteConfirm(null); }}
+                                className={`group flex items-center gap-1.5 px-2 py-1.5 rounded-lg cursor-pointer mb-0.5 border transition-colors ${
+                                    activeChatId === chat.id
+                                        ? "bg-blue-50 border-blue-200"
+                                        : "border-transparent hover:bg-gray-50"
                                 }`}
-                        >
-                            <span className="text-[11px] text-gray-600 flex-1 truncate">{chat.title}</span>
-                            {deleteConfirm === chat.id ? (
-                                <span
-                                    onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
-                                    className="text-[10px] text-red-500 font-semibold shrink-0 cursor-pointer"
-                                >
-                                    Delete
-                                </span>
-                            ) : (
-                                <span
-                                    onClick={(e) => { e.stopPropagation(); setDeleteConfirm(chat.id); }}
-                                    className="text-[15px] text-gray-300 shrink-0 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    ×
-                                </span>
-                            )}
-                        </div>
-                    ))}
-                    {chats.length === 0 && (
+                            >
+                                <span className="text-[11px] text-gray-600 flex-1 truncate">{chat.title}</span>
+                                {deleteConfirm === chat.id ? (
+                                    <span
+                                        onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
+                                        className="text-[10px] text-red-500 font-semibold shrink-0 cursor-pointer"
+                                    >
+                                        Delete
+                                    </span>
+                                ) : (
+                                    <span
+                                        onClick={(e) => { e.stopPropagation(); setDeleteConfirm(chat.id); }}
+                                        className="text-[15px] text-gray-300 shrink-0 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        ×
+                                    </span>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        /* Collapsed: show dots for each chat */
+                        chats.map((chat) => (
+                            <div
+                                key={chat.id}
+                                onClick={() => { setActiveChatId(chat.id); setSidebarOpen(true); }}
+                                title={chat.title}
+                                className={`w-8 h-8 mx-auto mb-1 rounded-lg flex items-center justify-center cursor-pointer transition-colors ${
+                                    activeChatId === chat.id ? "bg-blue-100" : "hover:bg-gray-100"
+                                }`}
+                            >
+                                <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+                            </div>
+                        ))
+                    )}
+
+                    {chats.length === 0 && sidebarOpen && (
                         <p className="text-[12px] text-gray-300 text-center mt-5">No conversations yet</p>
                     )}
                 </div>
 
                 {/* Clear all */}
-                {chats.length > 0 && (
+                {chats.length > 0 && sidebarOpen && (
                     <div className="px-2.5 py-2.5 border-t border-gray-200">
                         <button
                             onClick={() => setDeleteConfirm("__all__")}
@@ -202,17 +259,14 @@ export default function ValtrustIA() {
             </aside>
 
             {/* Main */}
-            <main className="flex-1 flex flex-col overflow-hidden bg-[#0B1E4A]"  >
-
+            <main className="flex-1 flex flex-col overflow-hidden bg-[#0B1E4A]">
                 {!activeChat ? (
-                    /* Welcome screen */
                     <div className="flex-1 flex flex-col items-center justify-center px-6 gap-0">
-
-                        {/* Logo */}
                         <div className="flex items-center gap-2.5 mb-5">
-                            <span className="text-[28px] font-bold text-white tracking-tight">
-                                Valtrust <span className="font-normal">IA</span>
-                            </span>
+                            {/* Logo */}
+                            <div className="h-20">
+                                <img className="h-85 -mt-43" src="/AIPage/eva.png" alt="" />
+                            </div>
                         </div>
 
                         <h1 className="text-[26px] font-bold text-white mb-2.5 text-center">Glad to have you here!</h1>
@@ -221,12 +275,10 @@ export default function ValtrustIA() {
                             Get reliable insights, market trends, and smarter decisions.
                         </p>
 
-                        {/* Icon circle */}
                         <div className="w-14 h-14 rounded-full border border-white/30 flex items-center justify-center text-2xl mb-8">
                             🏛
                         </div>
 
-                        {/* Input */}
                         <div className="relative w-full max-w-[540px] mb-4">
                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 text-base">✦</span>
                             <input
@@ -245,7 +297,6 @@ export default function ValtrustIA() {
                             </button>
                         </div>
 
-                        {/* Chips */}
                         <div className="flex gap-2.5 flex-wrap justify-center">
                             {CHIPS.map((chip) => (
                                 <button
@@ -253,13 +304,12 @@ export default function ValtrustIA() {
                                     onClick={() => sendMessage(chip.label)}
                                     className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white/85 text-[13px] cursor-pointer hover:bg-white/15 transition-colors"
                                 >
-                                    <img src={chip.icon} className="w-4 h-3.5"></img> {chip.label}
+                                    <img src={chip.icon} className="w-4 h-3.5" /> {chip.label}
                                 </button>
                             ))}
                         </div>
                     </div>
                 ) : (
-                    /* Chat screen */
                     <div className="flex-1 flex flex-col overflow-hidden">
                         <div className="flex-1 overflow-y-auto px-8 py-6 flex flex-col gap-3.5">
                             {activeChat.messages.map((msg, i) => (
@@ -273,17 +323,17 @@ export default function ValtrustIA() {
                                         </div>
                                     )}
                                     <div
-                                        className={`max-w-[68%] px-4 py-2.5 text-[14px] leading-relaxed text-white border border-white/15 ${msg.role === "user"
+                                        className={`max-w-[68%] px-4 py-2.5 text-[14px] leading-relaxed text-white border border-white/15 ${
+                                            msg.role === "user"
                                                 ? "bg-white/[0.18] rounded-[18px_18px_4px_18px]"
                                                 : "bg-white/10 rounded-[18px_18px_18px_4px]"
-                                            }`}
+                                        }`}
                                     >
                                         <Markdown remarkPlugins={[remarkGfm]}>{msg.content}</Markdown>
                                     </div>
                                 </div>
                             ))}
 
-                            {/* Typing indicator */}
                             {loading && (
                                 <div className="flex items-end gap-2.5">
                                     <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[13px] shrink-0">🏛</div>
@@ -301,7 +351,6 @@ export default function ValtrustIA() {
                             <div ref={messagesEndRef} />
                         </div>
 
-                        {/* Input */}
                         <div className="px-8 pb-5 pt-3 border-t border-white/10">
                             <div className="flex items-center gap-2.5 bg-white/10 border border-white/20 rounded-full px-4 py-1.5">
                                 <span className="text-white/40 text-base">✦</span>
@@ -315,8 +364,9 @@ export default function ValtrustIA() {
                                 <button
                                     onClick={() => sendMessage()}
                                     disabled={!input.trim() || loading}
-                                    className={`w-8 h-8 rounded-full border-none cursor-pointer flex items-center justify-center text-lg transition-colors disabled:opacity-40 ${!input.trim() || loading ? "bg-white/20 text-white" : "bg-white text-[#1a3a5c]"
-                                        }`}
+                                    className={`w-8 h-8 rounded-full border-none cursor-pointer flex items-center justify-center text-lg transition-colors disabled:opacity-40 ${
+                                        !input.trim() || loading ? "bg-white/20 text-white" : "bg-white text-[#1a3a5c]"
+                                    }`}
                                 >
                                     ›
                                 </button>
